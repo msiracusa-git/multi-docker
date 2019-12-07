@@ -1,0 +1,23 @@
+sudo: required
+services: 
+  - docker
+
+
+before_install:
+ - docker build -t msiracusa/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true msiracusa/react-test npm test 
+
+after_success:
+  - docker build -t msiracusa/multi-client ./client
+  - docker build -t msiracusa/multi-nginx ./nginx
+  - docker build -t msiracusa/multi-server ./server
+  - docker build -t msiracusa/multi-worker ./worker
+  # Log into the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -U "DOCKER_ID" --password-stdin
+  # Push built images to docker hub
+  - docker push msiracusa/multi-client
+  - docker push msiracusa/multi-nginx
+  - docker push msiracusa/multi-server
+  - docker push msiracusa/multi-worker
