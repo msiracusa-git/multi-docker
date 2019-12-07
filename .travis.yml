@@ -15,7 +15,7 @@ after_success:
   - docker build -t msiracusa/multi-server ./server
   - docker build -t msiracusa/multi-worker ./worker
   # Log into the docker CLI
-  - echo "$DOCKER_PASSWORD" | docker login -U "DOCKER_ID" --password-stdin
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Push built images to docker hub
   - docker push msiracusa/multi-client
   - docker push msiracusa/multi-nginx
